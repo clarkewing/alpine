@@ -24,13 +24,21 @@ export default function on (el, event, modifiers, callback) {
     // `e.preventDefault()` to happen, it'll still happen even if their callback gets throttled.
     if (modifiers.includes('debounce')) {
         let nextModifier = modifiers[modifiers.indexOf('debounce')+1] || 'invalid-wait'
-        let wait = isNumeric(nextModifier.split('ms')[0]) ? Number(nextModifier.split('ms')[0]) : 250
+        let wait = nextModifier.endsWith('ms') && isNumeric(nextModifier.split('ms')[0])
+            ? Number(nextModifier.split('ms')[0])
+            : nextModifier.endsWith('s') && isNumeric(nextModifier.split('s')[0])
+            ? Number(nextModifier.split('s')[0]) * 1000
+            : 250
 
         handler = debounce(handler, wait)
     }
     if (modifiers.includes('throttle')) {
         let nextModifier = modifiers[modifiers.indexOf('throttle')+1] || 'invalid-wait'
-        let wait = isNumeric(nextModifier.split('ms')[0]) ? Number(nextModifier.split('ms')[0]) : 250
+        let wait = nextModifier.endsWith('ms') && isNumeric(nextModifier.split('ms')[0])
+            ? Number(nextModifier.split('ms')[0])
+            : nextModifier.endsWith('s') && isNumeric(nextModifier.split('s')[0])
+            ? Number(nextModifier.split('s')[0]) * 1000
+            : 250
 
         handler = throttle(handler, wait)
     }
